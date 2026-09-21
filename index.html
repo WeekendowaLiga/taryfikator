@@ -46,7 +46,7 @@ body{
 .header-left{display:flex;align-items:center;gap:24px;}
 .f1-logo{
   background:var(--f1-black);
-  width:150px;height:100px;
+  width:110px;height:84px;
   border-radius:6px;
   transform:skewX(-15deg);
   display:flex;align-items:center;justify-content:center;
@@ -355,7 +355,7 @@ footer .accent{color:var(--f1-red);}
     <div class="f1-logo"><img src="Logo.png" alt="Logo" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🏁',style:'transform:skewX(15deg);font-size:26px;line-height:1'}))"></div>
     <div>
       <div class="f1-title">Taryfikator<br><span class="accent">Kar</span></div>
-      <div class="f1-subtitle">Weekendowa Liga F1 ·  Sezon 2</div>
+      <div class="f1-subtitle">Weekendowa Liga F1 · Sezon 2</div>
     </div>
   </div>
   <div class="header-right">
@@ -406,8 +406,8 @@ footer .accent{color:var(--f1-red);}
 <div class="modal-overlay" id="loginModal">
   <div class="modal-card">
     <h3>Logowanie Admina</h3>
-    <input type="email" id="field-email" placeholder="E-mail">
-    <input type="password" id="field-pass" placeholder="Hasło">
+    <input type="email" id="field-email" placeholder="E-mail" autocomplete="off">
+    <input type="password" id="field-pass" placeholder="Hasło" autocomplete="off">
     <div class="modal-btns">
       <button class="btn-action" style="flex:1;justify-content:center;" onclick="doLogin()">Zaloguj się</button>
       <button class="btn-action btn-danger" style="flex:1;justify-content:center;" onclick="toggleLoginModal(false)">Anuluj</button>
