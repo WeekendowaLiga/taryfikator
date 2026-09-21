@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Taryfikator Kar — Weekendowa Liga F1</title>
+<link rel="icon" type="image/png" href="Logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@400;600;700;800;900&family=Barlow+Condensed:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600;700&display=swap&subset=latin,latin-ext" rel="stylesheet">
+<style>
+:root{
+  --font-display:'Saira Condensed',sans-serif;
+  --font-data:'Barlow Condensed',sans-serif;
+  --font-body:'Exo 2',sans-serif;
+  --f1-red:#e10600;
+  --f1-red-bright:#ff2020;
+  --f1-black:#15151e;
+  --f1-white:#ffffff;
+  --f1-bg:#e8e8ea;
+  --f1-grey:#555;
+  --f1-light-grey:#d0d0d2;
+  --ls-nav:2px;
+  --ls-data:0.5px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;}
+body{
+  font-family:var(--font-body);
+  color:var(--f1-black);
+  background-color:var(--f1-bg);
+  padding-bottom:60px;
+}
+
+/* ===== HEADER ===== */
+.f1-header{
+  background:var(--f1-white);
+  border-bottom:8px solid var(--f1-black);
+  padding:22px 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:18px;
+}
+.header-left{display:flex;align-items:center;gap:24px;}
+.f1-logo{
+  background:var(--f1-black);
+  width:150px;height:100px;
+  border-radius:6px;
+  transform:skewX(-15deg);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 6px 18px rgba(0,0,0,0.25);
+}
+.f1-logo span{transform:skewX(15deg);font-size:26px;line-height:1;}
+.f1-logo img{width:auto;height:auto;max-width:88%;max-height:88%;object-fit:contain;transform:skewX(15deg);}
+.f1-title{
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:clamp(28px,4vw,42px);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  line-height:0.95;
+}
+.f1-title .accent{color:var(--f1-red);}
+.f1-subtitle{
+  font-family:var(--font-data);
+  font-size:14px;
+  color:var(--f1-grey);
+  text-transform:uppercase;
+  letter-spacing:3px;
+  margin-top:4px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.header-right{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.hidden{display:none !important;}
+
+.checker-strip{
+  height:10px;
+  background-color:var(--f1-red);
+}
+
+/* ===== BUTTONS ===== */
+.btn-action{
+  background:var(--f1-black);
+  color:var(--f1-white);
+  border:none;
+  padding:12px 22px;
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  border-radius:4px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  transition:background .25s,transform .2s cubic-bezier(.19,1,.22,1),box-shadow .2s;
+}
+.btn-action:hover{background:var(--f1-red);transform:translateY(-2px);box-shadow:0 8px 18px rgba(225,6,0,.35);}
+.btn-action:active{transform:translateY(0);}
+.btn-secondary{background:var(--f1-grey);}
+.btn-secondary:hover{background:#777;box-shadow:0 8px 18px rgba(0,0,0,.25);}
+.btn-danger{background:#800;}
+.btn-danger:hover{background:#c00;box-shadow:0 8px 18px rgba(200,0,0,.35);}
+.btn-edit-active{background:#106b3a;}
+.btn-edit-active:hover{background:#15914d;}
+.btn-sm{padding:6px 12px;font-size:11px;}
+
+/* ===== NAV / CATEGORY TABS ===== */
+.f1-nav{
+  background:var(--f1-black);
+  position:sticky;top:0;z-index:100;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  box-shadow:0 12px 24px rgba(0,0,0,0.2);
+}
+.nav-item{
+  padding:16px 24px;
+  color:#8a8a92;
+  font-family:var(--font-data);
+  font-weight:600;
+  font-size:16px;
+  text-transform:uppercase;
+  letter-spacing:var(--ls-nav);
+  cursor:pointer;
+  border-bottom:5px solid transparent;
+  transition:color .25s,background .25s,border-color .25s;
+  white-space:nowrap;
+}
+.nav-item:hover{
+  color:var(--f1-white);
+  background:rgba(255,255,255,0.05);
+}
+.nav-item.active{
+  color:var(--f1-black);
+  background:var(--f1-white);
+  border-bottom-color:var(--f1-red);
+  font-weight:700;
+}
+
+/* ===== SEARCH BAR ===== */
+.search-bar{
+  max-width:1400px;
+  margin:24px auto 0;
+  padding:0 5%;
+}
+.search-card{
+  background:#fff;
+  border:2px dashed var(--f1-red);
+  border-radius:8px;
+  padding:12px 18px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.05);
+}
+.search-card .sc-label{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:12px;
+  color:var(--f1-red);
+  text-transform:uppercase;
+  letter-spacing:2px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.search-bar input{
+  flex:1;
+  width:100%;
+  background:transparent;
+  border:none;
+  color:var(--f1-black);
+  padding:6px 0;
+  font-family:var(--font-body);
+  font-size:14px;
+}
+.search-bar input::placeholder{color:#999;letter-spacing:.5px;}
+.search-bar input:focus{outline:none;}
+
+/* ===== TABLE ===== */
+.table-wrap{
+  max-width:1400px;
+  margin:28px auto 0;
+  padding:0 5%;
+  overflow-x:auto;
+}
+.table-card{
+  background:var(--f1-white);
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,0.12);
+}
+.table-card-header{
+  background:#111;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:16px 20px;
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:15px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+.table-card-header .accent-bar{width:4px;height:18px;background:var(--f1-red);border-radius:2px;flex-shrink:0;}
+.f1-table{
+  width:100%;
+  min-width:900px;
+  border-collapse:collapse;
+  background:var(--f1-white);
+}
+.f1-table th{
+  background:#fff;
+  color:#8a8a92;
+  padding:14px 18px;
+  text-align:left;
+  font-family:var(--font-data);
+  font-weight:700;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  border-bottom:2px solid #111;
+}
+.f1-table td{
+  padding:16px 18px;
+  border-bottom:1px solid #ececee;
+  font-family:var(--font-data);
+  font-size:16px;
+  letter-spacing:var(--ls-data);
+  vertical-align:top;
+}
+.f1-table td.desc-cell{font-family:var(--font-body);font-size:13.5px;color:#555;line-height:1.4;}
+.f1-table tr:last-child td{border-bottom:none;}
+.f1-table tbody tr{animation:rowIn .4s cubic-bezier(.19,1,.22,1) both;}
+.f1-table tbody tr:nth-child(1){animation-delay:.02s;}
+.f1-table tbody tr:nth-child(2){animation-delay:.04s;}
+.f1-table tbody tr:nth-child(3){animation-delay:.06s;}
+.f1-table tbody tr:nth-child(4){animation-delay:.08s;}
+.f1-table tbody tr:nth-child(5){animation-delay:.10s;}
+.f1-table tbody tr:nth-child(6){animation-delay:.12s;}
+.f1-table tbody tr:nth-child(7){animation-delay:.14s;}
+.f1-table tbody tr:nth-child(8){animation-delay:.16s;}
+.f1-table tbody tr:nth-child(n+9){animation-delay:.18s;}
+@keyframes rowIn{from{opacity:0;transform:translateX(-14px);}to{opacity:1;transform:translateX(0);}}
+.f1-table tr:hover td{background:rgba(225,6,0,0.035);}
+
+.cat-chip{
+  display:inline-block;
+  background:var(--f1-black);
+  color:#fff;
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:11.5px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  padding:5px 10px;
+  border-radius:4px;
+  transform:skewX(-10deg);
+}
+.cat-chip span{display:inline-block;transform:skewX(10deg);}
+
+.pen-chip{
+  display:inline-block;
+  background:rgba(225,6,0,0.1);
+  color:var(--f1-red);
+  border:1.5px solid var(--f1-red);
+  font-family:var(--font-data);
+  font-weight:700;
+  font-size:13px;
+  padding:4px 10px;
+  border-radius:4px;
+  text-transform:uppercase;
+}
+.pts-chip{
+  display:inline-block;
+  background:var(--f1-black);
+  color:#fff;
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:13px;
+  padding:4px 10px;
+  border-radius:4px;
+}
+
+[contenteditable="true"]{cursor:pointer;border-radius:3px;transition:background .2s,color .2s;}
+[contenteditable="true"]:hover{background:rgba(225,6,0,0.08);}
+[contenteditable="true"]:hover::after{content:' ✎';font-size:.7em;opacity:.6;}
+[contenteditable="true"]:focus{outline:2px dashed var(--f1-red);background:rgba(225,6,0,0.06);}
+
+.delete-btn{
+  background:#800;color:#fff;border:none;padding:6px 9px;border-radius:4px;
+  cursor:pointer;font-size:12px;display:none;transition:background .2s;
+}
+.delete-btn:hover{background:#c00;}
+.edit-mode .delete-btn{display:inline-block;}
+
+.add-row-container{max-width:1400px;margin:18px auto 0;padding:0 5%;display:none;}
+.edit-mode-active .add-row-container{display:block;}
+
+/* ===== LOGIN MODAL ===== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;
+}
+.modal-overlay.show{display:flex;}
+.modal-card{
+  background:var(--f1-black);
+  color:#fff;
+  width:100%;max-width:380px;
+  border-radius:8px;
+  padding:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  border-top:5px solid var(--f1-red);
+}
+.modal-card h3{
+  font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  letter-spacing:2px;margin-bottom:18px;font-size:20px;
+}
+.modal-card input{
+  width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.15);
+  color:#fff;padding:11px 14px;font-family:var(--font-body);font-size:14px;
+  border-radius:5px;margin-bottom:12px;transition:border-color .2s;
+}
+.modal-card input:focus{outline:none;border-color:var(--f1-red);}
+.modal-card .modal-btns{display:flex;gap:10px;margin-top:8px;}
+
+/* ===== FOOTER ===== */
+footer{
+  margin-top:44px;text-align:center;padding:20px 5% 0;color:var(--f1-grey);
+  font-family:var(--font-data);font-size:12px;text-transform:uppercase;letter-spacing:2px;
+  border-top:1px solid rgba(0,0,0,0.08);padding-top:16px;
+}
+footer .accent{color:var(--f1-red);}
+
+@media (max-width:768px){
+  .f1-header{padding:16px 5%;}
+  .f1-title{font-size:24px;}
+  .nav-item{padding:12px 14px;font-size:13px;}
+  .f1-table td,.f1-table th{padding:10px 12px;font-size:12px;}
+  .f1-table td.desc-cell{font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<header class="f1-header">
+  <div class="header-left">
+    <div class="f1-logo"><img src="Logo.png" alt="Logo" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🏁',style:'transform:skewX(15deg);font-size:26px;line-height:1'}))"></div>
+    <div>
+      <div class="f1-title">Taryfikator<br><span class="accent">Kar</span></div>
+      <div class="f1-subtitle">Weekendowa Liga F1 ·  Sezon 2</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn-action" id="btnOpenLogin" onclick="toggleLoginModal(true)">🔒</button>
+    <button class="btn-action hidden" id="toggleEditBtn" onclick="toggleEditMode()">✏ Tryb Edycji</button>
+    <button class="btn-action btn-secondary hidden" id="btnSave" onclick="saveData()">💾 Zapisz</button>
+    <button class="btn-action btn-danger hidden" id="btnReset" onclick="resetToDefaults()">🔄 Domyślne</button>
+    <button class="btn-action btn-secondary hidden" id="btnLogout" onclick="doLogout()">🚪 Wyloguj</button>
+  </div>
+</header>
+<div class="checker-strip"></div>
+
+<nav class="f1-nav" id="categoryTabs"></nav>
+
+<div class="search-bar">
+  <div class="search-card">
+    <span class="sc-label">Szukaj</span>
+    <input type="text" id="searchInput" placeholder="Incydentu, kary lub opisu..." onkeyup="filterData()">
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-card">
+    <div class="table-card-header"><span class="accent-bar"></span>Taryfikator Incydentów</div>
+    <table class="f1-table">
+      <thead>
+        <tr>
+          <th style="width:14%;">Kategoria</th>
+          <th style="width:24%;">Wykroczenie / Incydent</th>
+          <th style="width:16%;">Kara</th>
+          <th style="width:9%;">Pkt Karne</th>
+          <th style="width:32%;">Opis i Dopiski Sędziowskie</th>
+          <th style="width:5%;"></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="add-row-container">
+  <button class="btn-action" onclick="addNewRow()">＋ Dodaj Nowy Incydent</button>
+</div>
+
+<footer>Taryfikator <span class="accent">Weekendowej Ligi F1</span> · </footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-card">
+    <h3>Logowanie Admina</h3>
+    <input type="email" id="field-email" placeholder="E-mail">
+    <input type="password" id="field-pass" placeholder="Hasło">
+    <div class="modal-btns">
+      <button class="btn-action" style="flex:1;justify-content:center;" onclick="doLogin()">Zaloguj się</button>
+      <button class="btn-action btn-danger" style="flex:1;justify-content:center;" onclick="toggleLoginModal(false)">Anuluj</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-app-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-auth-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.7.1/firebase-database-compat.js"></script>
+<script>
+const defaultData = [
+    { id: 1, category: "Kwalifikacje", name: "Blokowanie rywala na mierzonym kółku (Impeding)", penalty: "+3-5 sekund / Cofnięcie na starcie", points: "2 PK", desc: "Zablokowanie kierowcy będącego na szybkim okrążeniu. Sędziowie biorą pod uwagę telemetrię i komunikaty." },
+    { id: 2, category: "Kwalifikacje", name: "Celowe wywołanie żółtej/czerwonej flagi", penalty: "Anulowanie czasów / DSQ z sesji", points: "3-5 PK", desc: "Celowe rozbicie się lub zatrzymanie na torze w celu uniemożliwienia poprawienia czasu innym." },
+    { id: 3, category: "Kwalifikacje", name: "Wyjazd z pit lane na czerwonym świetle", penalty: "Start z końca stawki / Pit Lane Start", points: "3 PK", desc: "Wyjazd z alei serwisowej przed oficjalnym otwarciem sesji lub podczas czerwonej flagi." },
+    { id: 4, category: "Kwalifikacje", name: "Ścinanie zakrętów / Zyskanie pozycji na okrążeniu wyjazdowym", penalty: "Unieważnienie następnego okrążenia", points: "1 PK", desc: "Celowe łamanie limitów toru na okrążeniu zjazdowym/wyjazdowym w celu zyskania przewagi prędkości." },
+    { id: 5, category: "Start i Formowanie", name: "Falstart (Jump Start)", penalty: "Drive-Through / +5s w grze", points: "1 PK", desc: "Ruszenie przed zgaśnięciem czerwonych świateł (egzekwowane automatycznie lub sędziowsko)." },
+    { id: 6, category: "Start i Formowanie", name: "Spowodowanie kolizji w Zakręcie 1 (T1)", penalty: "+10s do czasu wyścigu / Grid Penalty", points: "3-5 PK", desc: "Zignorowanie punktu dohamowania na starcie i wywołanie karambolu lub uszkodzenie innych bolidów." },
+    { id: 7, category: "Start i Formowanie", name: "Wyprzedzanie na okrążeniu formującym", penalty: "Nakaz oddania pozycji / +5s", points: "1 PK", desc: "Niedozwolone wyprzedzanie przed linią startową, chyba że bolid z przodu uległ awarii." },
+    { id: 8, category: "Kolizje i Wyprzedzanie", name: "Spowodowanie kolizji (lekkie uderzenie)", penalty: "+5 sekund", points: "1 PK", desc: "Wypchnięcie lub uderzenie rywala bez spowodowania znaczących uszkodzeń bolidu." },
+    { id: 9, category: "Kolizje i Wyprzedzanie", name: "Spowodowanie kolizji z uszkodzeniem skrzydła/bolidu", penalty: "+10 sekund", points: "3 PK", desc: "Uderzenie skutkujące uszkodzeniem elementów aerodynamicznych lub obrotem rywala." },
+    { id: 10, category: "Kolizje i Wyprzedzanie", name: "Doprowadzenie do DNF innego kierowcy", penalty: "+20 sekund / Ban na wyścig", points: "5 PK", desc: "Bezpośrednie wyeliminowanie rywala z wyścigu w wyniku agresywnego/nieprzemyślanego manewru." },
+    { id: 11, category: "Kolizje i Wyprzedzanie", name: "Wepchnięcie rywala poza tor (Forcing off track)", penalty: "+5 sekund", points: "2 PK", desc: "Niewostawienie szerokości bolidu na dohamowaniu lub w wyjściu z zakrętu." },
+    { id: 12, category: "Kolizje i Wyprzedzanie", name: "Zmiana toru jazdy w strefie hamowania (Moving under braking)", penalty: "+5 sekund", points: "2 PK", desc: "Niebezpieczna reakcyjna zmiana linii obrony podczas dohamowania." },
+    { id: 13, category: "Kolizje i Wyprzedzanie", name: "Zygzakowanie na prostej (Weaving / Multi-block)", penalty: "Ostrzeżenie / +5 sekund", points: "1 PK", desc: "Dozwolona jest tylko jedna zmiana linii w celu obrony pozycji." },
+    { id: 14, category: "Kolizje i Wyprzedzanie", name: "Niebezpieczny powrót na tor (Unsafe rejoin)", penalty: "+5-10 sekund", points: "3 PK", desc: "Powrót na nitkę toru bezpośrednio pod koła nadjeżdżających bolidów po wypadnięciu z zakrętu." },
+    { id: 15, category: "Safety Car / VSC", name: "Wyprzedzanie pod SC lub VSC", penalty: "+10 sekund", points: "2 PK", desc: "Niedozwolone wyprzedzenie podczas trwania żółtej flagi na całym torze." },
+    { id: 16, category: "Safety Car / VSC", name: "Testowanie hamulców / Gwałtowne hamowanie (Brake check)", penalty: "Dyskwalifikacja (DSQ) / +20s", points: "5 PK", desc: "Stworzenie śmiertelnego zagrożenia poprzez nieuzasadnione wciśnięcie hamulca przed innym bolidem za SC." },
+    { id: 17, category: "Safety Car / VSC", name: "Zbyt wolna jazda / Tworzenie sztucznej luki za SC", penalty: "+5 sekund", points: "1 PK", desc: "Przetrzymywanie stawki ponad dozwolone 10 długości bolidu za liderem lub SC." },
+    { id: 18, category: "Safety Car / VSC", name: "Jazda na botu (AI) pod SC dłużej niż 1 sektor", penalty: "+5 sekund do czasu", points: "1 PK", desc: "Kierowca odpowiada za ewentualne incydenty wywołane przez sztuczną inteligencję." },
+    { id: 19, category: "Aleja i Limity Toru", name: "Przekroczenie prędkości w Pit Lane", penalty: "+5 sekund / Drive-Through", points: "1 PK", desc: "Przekroczenie limitu prędkości przy wjeździe lub w samej alei." },
+    { id: 20, category: "Aleja i Limity Toru", name: "Przekroczenie ciągłej linii wjazdu/wyjazdu z Pit Lane", penalty: "+5 sekund", points: "1 PK", desc: "Najechanie lub przejechanie linii wyznaczającej pas wjazdowy/wyjazdowy." },
+    { id: 21, category: "Aleja i Limity Toru", name: "Notoryczne ścinanie zakrętów (Track Limits)", penalty: "+5s za każde 3 ostrzeżenia", points: "1 PK", desc: "Nagromadzenie kar systemowych gry za przekraczanie limitów toru." },
+    { id: 22, category: "Organizacja i Zachowanie", name: "Wycofanie się (Retire) na torze zamiast w alei", penalty: "+5 sekund do nast. wyścigu", points: "2 PK", desc: "Użycie opcji 'Retire from session' na torze, co generuje niepotrzebny VSC/SC." },
+    { id: 23, category: "Organizacja i Zachowanie", name: "Użycie opcji 'Powrót na tor' (Reset to track)", penalty: "+10 sekund", points: "3 PK", desc: "Ręczny reset bolidu na tor w trakcie wyścigu." },
+    { id: 24, category: "Organizacja i Zachowanie", name: "Brak nagrania POV z incydentu na żądanie", penalty: "Odrzucenie odwołania / +5s", points: "1 PK", desc: "Kierowca ma obowiązek posiadać nagranie z włączoną telemetrią/HUDem." },
+    { id: 25, category: "Organizacja i Zachowanie", name: "Brak kultury / Obraźliwe zachowanie (Discord/Czat)", penalty: "Zawieszenie na 1-3 wyścigi", points: "5-10 PK", desc: "Braki w kulturze osobistej, wyzwiska w stronę sędziów lub innych zawodników." },
+    { id: 26, category: "Organizacja i Zachowanie", name: "Niezgłoszona nieobecność na wyścigu", penalty: "Start z końca stawki w nast. GP", points: "3 PK", desc: "Brak poinformowania dyrekcji wyścigu o braku możliwości startu w wymaganym czasie." }
+];
+
+// ===================== FIREBASE =====================
+const firebaseConfig = {
+    apiKey: "AIzaSyAGqYLPBR8UnOY3GdirJ-V4fkI-cygU8HA",
+    authDomain: "f1-liga-43d29.firebaseapp.com",
+    projectId: "f1-liga-43d29",
+    databaseURL: "https://f1-liga-43d29-default-rtdb.europe-west1.firebasedatabase.app"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+const DATA_PATH = 'taryfikator/items'; // osobna gałąź, nie dotyka split1/split2/standings itd.
+
+let currentData = [];
+let activeCategory = "Wszystkie";
+let isEditMode = false;
+let isLoggedIn = false;
+let hasSeeded = false;
+
+function setSyncStatus(state, label){
+    // Status tekstowy usunięty z nagłówka — informacja o synchronizacji zostaje tylko w stopce.
+}
+
+// Odczyt danych na żywo (widoczny dla wszystkich odwiedzających)
+db.ref(DATA_PATH).on('value', snap => {
+    const val = snap.val();
+    if (val) {
+        currentData = Object.keys(val).map(k => val[k]).sort((a,b) => a.id - b.id);
+        setSyncStatus('online', 'Połączono z Firebase');
+    } else {
+        currentData = [...defaultData];
+        setSyncStatus('online', 'Połączono z Firebase (brak danych — wyświetlam domyślne)');
+        if (isLoggedIn && !hasSeeded) seedDefaults();
+    }
+    renderCategoryTabs();
+    renderTable();
+}, err => {
+    currentData = [...defaultData];
+    setSyncStatus('offline', 'Brak dostępu do bazy — tryb offline (dane domyślne)');
+    renderCategoryTabs();
+    renderTable();
+    console.error(err);
+});
+
+function seedDefaults(){
+    hasSeeded = true;
+    const obj = {};
+    defaultData.forEach(item => obj[item.id] = item);
+    db.ref(DATA_PATH).set(obj).catch(e => console.error('Seed error:', e));
+}
+
+// ===================== AUTH =====================
+auth.onAuthStateChanged(user => {
+    isLoggedIn = !!user;
+    document.getElementById('btnOpenLogin').classList.toggle('hidden', isLoggedIn);
+    document.getElementById('toggleEditBtn').classList.toggle('hidden', !isLoggedIn);
+    document.getElementById('btnSave').classList.toggle('hidden', !isLoggedIn);
+    document.getElementById('btnReset').classList.toggle('hidden', !isLoggedIn);
+    document.getElementById('btnLogout').classList.toggle('hidden', !isLoggedIn);
+    if (!isLoggedIn) {
+        isEditMode = false;
+        document.body.classList.remove('edit-mode-active', 'edit-mode');
+        renderTable();
+    }
+});
+
+function toggleLoginModal(show){
+    document.getElementById('loginModal').classList.toggle('show', show);
+}
+
+function doLogin(){
+    const email = document.getElementById('field-email').value;
+    const pass = document.getElementById('field-pass').value;
+    auth.signInWithEmailAndPassword(email, pass)
+        .then(() => toggleLoginModal(false))
+        .catch(err => alert('Błąd logowania: ' + err.message));
+}
+
+function doLogout(){
+    auth.signOut();
+}
+
+// ===================== RENDER =====================
+function renderCategoryTabs() {
+    const categories = ["Wszystkie", ...new Set(currentData.map(item => item.category))];
+    const tabsContainer = document.getElementById('categoryTabs');
+    tabsContainer.innerHTML = '';
+    categories.forEach(cat => {
+        const btn = document.createElement('div');
+        btn.className = `nav-item ${cat === activeCategory ? 'active' : ''}`;
+        btn.innerText = cat;
+        btn.onclick = () => { activeCategory = cat; renderCategoryTabs(); renderTable(); };
+        tabsContainer.appendChild(btn);
+    });
+}
+
+const CATEGORY_COLORS = ['#00d2be','#3671c6','#e10600','#ff8000','#229971','#6c98ff','#a6051a','#37bedd'];
+function categoryColor(cat){
+    const cats = [...new Set(currentData.map(i => i.category))];
+    const idx = cats.indexOf(cat);
+    return CATEGORY_COLORS[idx >= 0 ? idx % CATEGORY_COLORS.length : 0];
+}
+
+function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    tbody.innerHTML = '';
+
+    const filtered = currentData.filter(item => {
+        const matchesCat = activeCategory === "Wszystkie" || item.category === activeCategory;
+        const matchesSearch = item.name.toLowerCase().includes(searchInput) ||
+                              item.desc.toLowerCase().includes(searchInput) ||
+                              item.penalty.toLowerCase().includes(searchInput) ||
+                              item.category.toLowerCase().includes(searchInput);
+        return matchesCat && matchesSearch;
+    });
+
+    filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.dataset.id = item.id;
+        const editable = isEditMode && isLoggedIn;
+        tr.innerHTML = `
+            <td><span class="cat-chip" contenteditable="${editable}" onblur="updateCell(${item.id}, 'category', this.innerText)"><span>${item.category}</span></span></td>
+            <td contenteditable="${editable}" onblur="updateCell(${item.id}, 'name', this.innerText)"><strong>${item.name}</strong></td>
+            <td><span class="pen-chip" contenteditable="${editable}" onblur="updateCell(${item.id}, 'penalty', this.innerText)">${item.penalty}</span></td>
+            <td><span class="pts-chip" contenteditable="${editable}" onblur="updateCell(${item.id}, 'points', this.innerText)">${item.points}</span></td>
+            <td class="desc-cell" contenteditable="${editable}" onblur="updateCell(${item.id}, 'desc', this.innerText)">${item.desc}</td>
+            <td><button class="delete-btn" onclick="deleteRow(${item.id})">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function filterData() { renderTable(); }
+
+// ===================== EDYCJA -> ZAPIS DO FIREBASE =====================
+function updateCell(id, field, value) {
+    if (!isLoggedIn) return;
+    const item = currentData.find(d => d.id === id);
+    if (!item) return;
+    const clean = value.trim();
+    item[field] = clean;
+    db.ref(`${DATA_PATH}/${id}/${field}`).set(clean)
+        .catch(e => alert('Błąd zapisu do Firebase: ' + e.message));
+}
+
+function toggleEditMode() {
+    if (!isLoggedIn) { toggleLoginModal(true); return; }
+    isEditMode = !isEditMode;
+    const btn = document.getElementById('toggleEditBtn');
+    const body = document.body;
+    if (isEditMode) {
+        btn.classList.add('btn-edit-active');
+        btn.innerText = '✔ Zakończ Edycję';
+        body.classList.add('edit-mode-active', 'edit-mode');
+    } else {
+        btn.classList.remove('btn-edit-active');
+        btn.innerText = '✏ Tryb Edycji';
+        body.classList.remove('edit-mode-active', 'edit-mode');
+    }
+    renderTable();
+}
+
+function addNewRow() {
+    if (!isLoggedIn) { toggleLoginModal(true); return; }
+    const newId = currentData.length > 0 ? Math.max(...currentData.map(d => d.id)) + 1 : 1;
+    const newItem = {
+        id: newId,
+        category: activeCategory === "Wszystkie" ? "Inne" : activeCategory,
+        name: "Nowy incydent",
+        penalty: "+5 sekund",
+        points: "1 PK",
+        desc: "Kliknij, aby edytować opis wykroczenia."
+    };
+    db.ref(`${DATA_PATH}/${newId}`).set(newItem)
+        .catch(e => alert('Błąd zapisu do Firebase: ' + e.message));
+}
+
+function deleteRow(id) {
+    if (!isLoggedIn) { toggleLoginModal(true); return; }
+    if (confirm("Czy na pewno chcesz usunąć ten incydent z taryfikatora?")) {
+        db.ref(`${DATA_PATH}/${id}`).remove()
+            .catch(e => alert('Błąd usuwania w Firebase: ' + e.message));
+    }
+}
+
+function saveData() {
+    if (!isLoggedIn) { toggleLoginModal(true); return; }
+    const obj = {};
+    currentData.forEach(item => obj[item.id] = item);
+    db.ref(DATA_PATH).set(obj)
+        .then(() => alert('✅ Pełna synchronizacja z Firebase zakończona!'))
+        .catch(e => alert('Błąd zapisu do Firebase: ' + e.message));
+}
+
+function resetToDefaults() {
+    if (!isLoggedIn) { toggleLoginModal(true); return; }
+    if (confirm("Czy na pewno chcesz przywrócić domyślny taryfikator w Firebase? Wszystkie zmiany zostaną nadpisane.")) {
+        const obj = {};
+        defaultData.forEach(item => obj[item.id] = item);
+        db.ref(DATA_PATH).set(obj)
+            .then(() => alert('🔄 Przywrócono domyślny taryfikator w Firebase.'))
+            .catch(e => alert('Błąd zapisu do Firebase: ' + e.message));
+    }
+}
+</script>
+</body>
+</html>
